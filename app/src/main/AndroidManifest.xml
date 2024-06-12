@@ -13,6 +13,24 @@
         android:theme="@style/Theme.Trabalho_final"
         tools:targetApi="31">
         <activity
+            android:name=".BebidasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PeixeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CarneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VegetaisActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FrutaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CarboidratosActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

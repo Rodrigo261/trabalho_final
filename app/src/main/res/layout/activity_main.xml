@@ -1,7 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/buttonCarboidratos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Carboidratos" />
+
+    <Button
+        android:id="@+id/buttonFruta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Frutas" />
+
+    <Button
+        android:id="@+id/buttonVegetais"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vegetais" />
+
+    <Button
+        android:id="@+id/buttonCarne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Carne" />
+
+    <Button
+        android:id="@+id/buttonPeixe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Peixe" />
+
+    <Button
+        android:id="@+id/buttonBebidas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bebidas" />
 </LinearLayout>
