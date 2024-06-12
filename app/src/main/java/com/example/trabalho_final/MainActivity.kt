@@ -1,10 +1,9 @@
-package com.example.trabalhofinal
+package com.example.trabalho_final
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.trabalho_final.R
-
+import android.os.Bundle
+import android.view.View
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,34 +11,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        buttonCarboidratos.setOnClickListener {
-            val intent = Intent(this, CarboidratosActivity::class.java)
-            startActivity(intent)
+
+        findViewById<View>(R.id.btnBebidas).setOnClickListener {
+
+            startActivity(Intent(this, BebidasActivity::class.java))
         }
 
-        buttonFruta.setOnClickListener {
-            val intent = Intent(this, FrutaActivity::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.btnPeixe).setOnClickListener {
+
+            startActivity(Intent(this, PeixesActivity::class.java))
         }
 
-        buttonVegetais.setOnClickListener {
-            val intent = Intent(this, VegetaisActivity::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.btnCarne).setOnClickListener {
+
+            startActivity(Intent(this, CarnesActivity::class.java))
         }
 
-        buttonCarne.setOnClickListener {
-            val intent = Intent(this, CarneActivity::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.btnCarboidratos).setOnClickListener {
+
+            startActivity(Intent(this, CarboidratosActivity::class.java))
         }
 
-        buttonPeixe.setOnClickListener {
-            val intent = Intent(this, PeixeActivity::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.btnFruta).setOnClickListener {
+
+            startActivity(Intent(this, FrutaActivity::class.java))
         }
 
-        buttonBebidas.setOnClickListener {
-            val intent = Intent(this, BebidasActivity::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.btnVegetais).setOnClickListener {
+
+            startActivity(Intent(this, VegetaisActivity::class.java))
         }
     }
 }

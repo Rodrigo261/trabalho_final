@@ -1,43 +1,61 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/buttonCarboidratos"
-        android:layout_width="match_parent"
+        android:id="@+id/btnBebidas"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Carboidratos" />
+        android:text="Bebidas"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/buttonFruta"
-        android:layout_width="match_parent"
+        android:id="@+id/btnPeixe"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Frutas" />
+        android:text="Peixe"
+        android:layout_below="@id/btnBebidas"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/buttonVegetais"
-        android:layout_width="match_parent"
+        android:id="@+id/btnCarne"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vegetais" />
+        android:text="Carne"
+        android:layout_below="@id/btnPeixe"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/buttonCarne"
-        android:layout_width="match_parent"
+        android:id="@+id/btnCarboidratos"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Carne" />
+        android:text="Carboidratos"
+        android:layout_below="@id/btnCarne"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/buttonPeixe"
-        android:layout_width="match_parent"
+        android:id="@+id/btnFruta"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Peixe" />
+        android:text="Fruta"
+        android:layout_below="@id/btnCarboidratos"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/buttonBebidas"
-        android:layout_width="match_parent"
+        android:id="@+id/btnVegetais"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bebidas" />
-</LinearLayout>
+        android:text="Vegetais"
+        android:layout_below="@id/btnFruta"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

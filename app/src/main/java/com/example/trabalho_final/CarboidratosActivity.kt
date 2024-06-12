@@ -1,13 +1,14 @@
-package com.example.trabalhofinal
+package com.example.trabalho_final
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.trabalho_final.R
 
 class CarboidratosActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_carboidratos)
+        setContentView(R.layout.activity_bebidas)
+
+
     }
 }
