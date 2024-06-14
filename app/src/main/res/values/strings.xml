@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">trabalho_final</string>
+    <string-array name="sexos">
+        <item>Masculino</item>
+        <item>Feminino</item>
+    </string-array>
+    <string-array name="niveis_atividade">
+        <item>Sedentário</item>
+        <item>Levemente ativo</item>
+        <item>Moderadamente ativo</item>
+        <item>Muito ativo</item>
+        <item>Super ativo</item>
+    </string-array>
 </resources>
