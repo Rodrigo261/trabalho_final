@@ -17,7 +17,7 @@ fun FrutaScreen() {
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
 
-    // Definindo as opções para frutas
+
     val frutas = listOf(
         "Maçã",
         "Banana",
@@ -34,11 +34,11 @@ fun FrutaScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Seleção de fruta
+
         Text(text = "Selecione a Fruta")
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Botões de rádio para seleção de fruta
+
         frutas.forEach { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
@@ -57,7 +57,6 @@ fun FrutaScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo para quantidade em gramas
         OutlinedTextField(
             value = quantidade,
             onValueChange = { quantidade = it },
@@ -67,9 +66,8 @@ fun FrutaScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botão para calcular calorias
         Button(onClick = {
-            // Calcular calorias das frutas
+
             val calorias = atualizarCaloriasFruta(fruta, quantidade)
             totalCalorias = calorias
             showResult = true
@@ -79,25 +77,22 @@ fun FrutaScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Exibir calorias calculadas somente quando showResult é true
         if (showResult) {
             Text(text = "Total de calorias consumidas: $totalCalorias cal")
         }
     }
 }
 
-// Função para calcular as calorias por grama baseadas na fruta
 fun calcularCaloriasPorGramaFruta(fruta: String): Float {
     return when (fruta) {
-        "Maçã" -> 0.52f // Calorias por grama
+        "Maçã" -> 0.52f
         "Banana" -> 0.89f
         "Laranja" -> 0.47f
         "Morango" -> 0.32f
-        else -> 0f // Default para frutas não especificadas corretamente
+        else -> 0f
     }
 }
 
-// Função para atualizar as calorias totais
 fun atualizarCaloriasFruta(fruta: String, quantidade: String): Int {
     val quantidadeGramas = quantidade.toIntOrNull() ?: 0
     val caloriasPorGrama = calcularCaloriasPorGramaFruta(fruta)
