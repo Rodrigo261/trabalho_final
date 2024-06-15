@@ -1,0 +1,107 @@
+package com.example.trabalho_final
+
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun FrutaScreen() {
+    var fruta by rememberSaveable { mutableStateOf("") }
+    var quantidade by rememberSaveable { mutableStateOf("") }
+    var totalCalorias by rememberSaveable { mutableStateOf(0) }
+    var showResult by rememberSaveable { mutableStateOf(false) }
+
+    // Definindo as opções para frutas
+    val frutas = listOf(
+        "Maçã",
+        "Banana",
+        "Laranja",
+        "Morango"
+    )
+
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Seleção de fruta
+        Text(text = "Selecione a Fruta")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Botões de rádio para seleção de fruta
+        frutas.forEach { option ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = fruta == option,
+                    onClick = { fruta = option },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Text(text = option)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Campo para quantidade em gramas
+        OutlinedTextField(
+            value = quantidade,
+            onValueChange = { quantidade = it },
+            label = { Text("Quantidade (g)") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Botão para calcular calorias
+        Button(onClick = {
+            // Calcular calorias das frutas
+            val calorias = atualizarCaloriasFruta(fruta, quantidade)
+            totalCalorias = calorias
+            showResult = true
+        }) {
+            Text(text = "Calcular Calorias")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Exibir calorias calculadas somente quando showResult é true
+        if (showResult) {
+            Text(text = "Total de calorias consumidas: $totalCalorias cal")
+        }
+    }
+}
+
+// Função para calcular as calorias por grama baseadas na fruta
+fun calcularCaloriasPorGramaFruta(fruta: String): Float {
+    return when (fruta) {
+        "Maçã" -> 0.52f // Calorias por grama
+        "Banana" -> 0.89f
+        "Laranja" -> 0.47f
+        "Morango" -> 0.32f
+        else -> 0f // Default para frutas não especificadas corretamente
+    }
+}
+
+// Função para atualizar as calorias totais
+fun atualizarCaloriasFruta(fruta: String, quantidade: String): Int {
+    val quantidadeGramas = quantidade.toIntOrNull() ?: 0
+    val caloriasPorGrama = calcularCaloriasPorGramaFruta(fruta)
+    return (quantidadeGramas * caloriasPorGrama).toInt()
+}
+
+

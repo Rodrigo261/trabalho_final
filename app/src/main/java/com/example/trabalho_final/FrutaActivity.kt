@@ -1,42 +1,34 @@
 package com.example.trabalho_final
 
+
 import android.os.Bundle
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.trabalho_final.ui.theme.TrabalhoFinalTheme
 
-class FrutaActivity : AppCompatActivity() {
-
+class FrutaActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fruta)
-
-        val rgFruta = findViewById<RadioGroup>(R.id.rg_fruta)
-        val etQuantidade = findViewById<EditText>(R.id.et_quantidade)
-        val btnCalcular = findViewById<Button>(R.id.btn_calcular)
-        val tvResultado = findViewById<TextView>(R.id.tv_resultado)
-
-        btnCalcular.setOnClickListener {
-            val quantidadeStr = etQuantidade.text.toString()
-
-            if (quantidadeStr.isEmpty()) {
-                Toast.makeText(this, "Por favor, insira a quantidade", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+        setContent {
+            TrabalhoFinalTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        FrutaScreen()
+                    }
+                )
             }
-
-            val quantidade = quantidadeStr.toInt()
-            val calorias = when (rgFruta.checkedRadioButtonId) {
-                R.id.rb_maca -> calcularCalorias(quantidade, 52)
-                R.id.rb_banana -> calcularCalorias(quantidade, 89)
-                R.id.rb_laranja -> calcularCalorias(quantidade, 43)
-                R.id.rb_morango -> calcularCalorias(quantidade, 32)
-                else -> 0
-            }
-
-            tvResultado.text = "Calorias: $calorias kcal"
         }
-    }
-
-    private fun calcularCalorias(quantidade: Int, caloriasPor100g: Int): Int {
-        return (quantidade * caloriasPor100g) / 100
     }
 }
