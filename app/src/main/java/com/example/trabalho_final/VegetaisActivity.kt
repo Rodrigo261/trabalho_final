@@ -1,42 +1,34 @@
 package com.example.trabalho_final
 
+
 import android.os.Bundle
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.trabalho_final.ui.theme.TrabalhoFinalTheme
 
-class VegetaisActivity : AppCompatActivity() {
-
+class VegetaisActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_vegetais)
-
-        val rgVegetais = findViewById<RadioGroup>(R.id.rg_vegetais)
-        val etQuantidade = findViewById<EditText>(R.id.et_quantidade)
-        val btnCalcular = findViewById<Button>(R.id.btn_calcular)
-        val tvResultado = findViewById<TextView>(R.id.tv_resultado)
-
-        btnCalcular.setOnClickListener {
-            val quantidadeStr = etQuantidade.text.toString()
-
-            if (quantidadeStr.isEmpty()) {
-                Toast.makeText(this, "Por favor, insira a quantidade", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+        setContent {
+            TrabalhoFinalTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        VegetaisScreen()
+                    }
+                )
             }
-
-            val quantidade = quantidadeStr.toInt()
-            val calorias = when (rgVegetais.checkedRadioButtonId) {
-                R.id.rb_brocolis -> calcularCalorias(quantidade, 34)
-                R.id.rb_cenoura -> calcularCalorias(quantidade, 41)
-                R.id.rb_alface -> calcularCalorias(quantidade, 15)
-                R.id.rb_tomate -> calcularCalorias(quantidade, 18)
-                else -> 0
-            }
-
-            tvResultado.text = "Calorias: $calorias kcal"
         }
-    }
-
-    private fun calcularCalorias(quantidade: Int, caloriasPor100g: Int): Int {
-        return (quantidade * caloriasPor100g) / 100
     }
 }
