@@ -2,12 +2,7 @@ package com.example.trabalho_final
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -19,7 +14,8 @@ import androidx.compose.ui.unit.dp
 fun BebidasScreen() {
     var bebida by rememberSaveable { mutableStateOf("") }
     var quantidade by rememberSaveable { mutableStateOf("") }
-
+    var totalCalorias by rememberSaveable { mutableStateOf(0) }
+    var showResult by rememberSaveable { mutableStateOf(false) }
 
     val bebidas = listOf(
         "Coca-Cola",
@@ -37,7 +33,7 @@ fun BebidasScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
+        // Seleção de bebida
         Text(text = "Selecione a Bebida")
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -73,14 +69,17 @@ fun BebidasScreen() {
 
         Button(onClick = {
 
-            val quantidadeMl = quantidade.toIntOrNull() ?: 0
-            val caloriasPorMl = calcularCaloriasPorMl(bebida)
-            val totalCalorias = quantidadeMl * caloriasPorMl
-
-            val resultado = "Total de calorias consumidas: $totalCalorias calorias"
-            Toast.makeText(context, resultado, Toast.LENGTH_LONG).show()
+            totalCalorias = atualizarCalorias(bebida, quantidade)
+            showResult = true
         }) {
             Text(text = "Calcular Calorias")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        if (showResult) {
+            Text(text = "Total de calorias consumidas: $totalCalorias calorias")
         }
     }
 }
@@ -88,10 +87,17 @@ fun BebidasScreen() {
 
 fun calcularCaloriasPorMl(bebida: String): Int {
     return when (bebida) {
-        "Coca-Cola" -> 37
+        "Coca-Cola" -> 37  // Calorias por ml
         "Sumo de Laranja" -> 45
         "Água" -> 0
         "Leite" -> 64
         else -> 0
     }
+}
+
+
+fun atualizarCalorias(bebida: String, quantidade: String): Int {
+    val quantidadeMl = quantidade.toIntOrNull() ?: 0
+    val caloriasPorMl = calcularCaloriasPorMl(bebida)
+    return quantidadeMl * caloriasPorMl
 }
