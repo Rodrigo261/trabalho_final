@@ -1,6 +1,5 @@
 package com.example.trabalho_final
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -87,7 +86,7 @@ fun BebidasScreen() {
 
 fun calcularCaloriasPorMl(bebida: String): Int {
     return when (bebida) {
-        "Coca-Cola" -> 37  // Calorias por ml
+        "Coca-Cola" -> 37
         "Sumo de Laranja" -> 45
         "Água" -> 0
         "Leite" -> 64
