@@ -2,6 +2,8 @@ package com.example.trabalho_final
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,7 +20,9 @@ fun ObjetivoScreen() {
     var altura by rememberSaveable { mutableStateOf("") }
     var peso by rememberSaveable { mutableStateOf("") }
     var atividade by rememberSaveable { mutableStateOf("") }
-
+    var objetivo by rememberSaveable { mutableStateOf("") }
+    var caloriasDiarias by rememberSaveable { mutableStateOf(0) }
+    var showResult by rememberSaveable { mutableStateOf(false) }
 
     val atividades = listOf(
         "Sedentário",
@@ -28,18 +32,36 @@ fun ObjetivoScreen() {
         "Extremamente Ativo"
     )
 
+    val objetivos = listOf(
+        "Diminuir Peso",
+        "Manter Peso",
+        "Aumentar Peso"
+    )
+
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(value = nome, onValueChange = { nome = it }, label = { Text("Nome") })
+        // Input fields
+        OutlinedTextField(
+            value = nome,
+            onValueChange = { nome = it },
+            label = { Text("Nome") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        // Radio buttons for Sexo
+        Text(text = "Sexo")
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
             RadioButton(
                 selected = sexo == "Masculino",
                 onClick = { sexo = "Masculino" },
@@ -47,7 +69,7 @@ fun ObjetivoScreen() {
                     selectedColor = MaterialTheme.colorScheme.primary,
                     unselectedColor = MaterialTheme.colorScheme.onSurface
                 ),
-                modifier = Modifier.padding(end = 16.dp)
+                modifier = Modifier.padding(end = 8.dp)
             )
             Text(text = "Masculino")
             Spacer(modifier = Modifier.width(16.dp))
@@ -57,65 +79,102 @@ fun ObjetivoScreen() {
                 colors = RadioButtonDefaults.colors(
                     selectedColor = MaterialTheme.colorScheme.primary,
                     unselectedColor = MaterialTheme.colorScheme.onSurface
-                )
+                ),
+                modifier = Modifier.padding(end = 8.dp)
             )
             Text(text = "Feminino")
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-
-        TextField(value = idade, onValueChange = { idade = it }, label = { Text("Idade") })
+        // Input fields for Idade, Altura, Peso
+        OutlinedTextField(
+            value = idade,
+            onValueChange = { idade = it },
+            label = { Text("Idade") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(value = altura, onValueChange = { altura = it }, label = { Text("Altura") })
+        OutlinedTextField(
+            value = altura,
+            onValueChange = { altura = it },
+            label = { Text("Altura (cm)") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(value = peso, onValueChange = { peso = it }, label = { Text("Peso") })
+        OutlinedTextField(
+            value = peso,
+            onValueChange = { peso = it },
+            label = { Text("Peso (kg)") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
-
-        Column {
-            Text(text = "Atividade Diária")
-            Spacer(modifier = Modifier.height(8.dp))
-            atividades.forEach { option ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = atividade == option,
-                        onClick = { atividade = option },
-                        colors = RadioButtonDefaults.colors(
-                            selectedColor = MaterialTheme.colorScheme.primary,
-                            unselectedColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
-                    Text(text = option)
-                }
-                Spacer(modifier = Modifier.height(8.dp))
+        // Radio buttons for Atividade Diária
+        Text(text = "Atividade Diária")
+        atividades.forEach { option ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = atividade == option,
+                    onClick = { atividade = option },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = option)
             }
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Radio buttons for Objetivo
+        Text(text = "Objetivo")
+        objetivos.forEach { option ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = objetivo == option,
+                    onClick = { objetivo = option },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = option)
+            }
+            Spacer(modifier = Modifier.height(4.dp))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
+        // Botão para calcular objetivo
         Button(onClick = {
-
-            if (nome.isNotBlank() && sexo.isNotBlank() && idade.isNotBlank() && altura.isNotBlank() && peso.isNotBlank() && atividade.isNotBlank()) {
+            if (nome.isNotBlank() && sexo.isNotBlank() && idade.isNotBlank() && altura.isNotBlank() && peso.isNotBlank() && atividade.isNotBlank() && objetivo.isNotBlank()) {
                 val idadeInt = idade.toIntOrNull() ?: 0
                 val alturaFloat = altura.toFloatOrNull() ?: 0f
                 val pesoFloat = peso.toFloatOrNull() ?: 0f
 
-
                 val gastoEnergetico = calcularGastoEnergetico(sexo, idadeInt, alturaFloat, pesoFloat, atividade)
 
-                val resultado = "$nome, o seu gasto calórico é $gastoEnergetico calorias"
-                Toast.makeText(context, resultado, Toast.LENGTH_LONG).show()
+                caloriasDiarias = calcularCaloriasDiarias(gastoEnergetico, objetivo)
+                showResult = true
             } else {
                 Toast.makeText(context, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
             }
         }) {
-            Text(text = "Calcular Gasto Energético Diário")
+            Text(text = "Calcular Calorias Diárias")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Exibir calorias calculadas somente quando showResult é true
+        if (showResult) {
+            Text(text = "$nome, para alcançar o objetivo de $objetivo, você deve consumir $caloriasDiarias calorias por dia.")
         }
     }
 }
-
 
 fun calcularGastoEnergetico(sexo: String, idade: Int, altura: Float, peso: Float, atividade: String): Int {
     val atividadeMultiplier = when (atividade) {
@@ -128,15 +187,20 @@ fun calcularGastoEnergetico(sexo: String, idade: Int, altura: Float, peso: Float
     }
 
     val bmr = if (sexo.equals("Masculino", ignoreCase = true)) {
-
         88.362f + (13.397f * peso) + (4.799f * altura) - (5.677f * idade)
     } else {
-
         447.593f + (9.247f * peso) + (3.098f * altura) - (4.330f * idade)
     }
 
-    val gastoEnergetico = (bmr * atividadeMultiplier).toInt()
-    return gastoEnergetico
+    return (bmr * atividadeMultiplier).toInt()
 }
 
+fun calcularCaloriasDiarias(gastoEnergetico: Int, objetivo: String): Int {
+    return when (objetivo) {
+        "Diminuir Peso" -> gastoEnergetico - 500
+        "Aumentar Peso" -> gastoEnergetico + 500
+        "Manter Peso" -> gastoEnergetico
+        else -> gastoEnergetico
+    }
+}
 
