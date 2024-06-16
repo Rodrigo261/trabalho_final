@@ -1,7 +1,5 @@
 package com.example.trabalho_final
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -41,7 +39,6 @@ fun ObjetivoScreen() {
     )
 
     val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     Column(
         modifier = Modifier
@@ -89,7 +86,7 @@ fun ObjetivoScreen() {
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-
+        // Input fields for Idade, Altura, Peso
         OutlinedTextField(
             value = idade,
             onValueChange = { idade = it },
@@ -112,7 +109,7 @@ fun ObjetivoScreen() {
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-
+        // Radio buttons for Atividade Diária
         Text(text = "Atividade Diária")
         atividades.forEach { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -132,6 +129,7 @@ fun ObjetivoScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Radio buttons for Objetivo
         Text(text = "Objetivo")
         objetivos.forEach { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -151,6 +149,7 @@ fun ObjetivoScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Botão para calcular objetivo
         Button(onClick = {
             if (nome.isNotBlank() && sexo.isNotBlank() && idade.isNotBlank() && altura.isNotBlank() && peso.isNotBlank() && atividade.isNotBlank() && objetivo.isNotBlank()) {
                 val idadeInt = idade.toIntOrNull() ?: 0
@@ -161,12 +160,6 @@ fun ObjetivoScreen() {
 
                 caloriasDiarias = calcularCaloriasDiarias(gastoEnergetico, objetivo)
                 showResult = true
-
-
-                with(sharedPreferences.edit()) {
-                    putInt("caloriasDiarias", caloriasDiarias)
-                    apply()
-                }
             } else {
                 Toast.makeText(context, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
             }
@@ -176,6 +169,7 @@ fun ObjetivoScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Exibir calorias calculadas somente quando showResult é true
         if (showResult) {
             Text(text = "$nome, para alcançar o objetivo de $objetivo, você deve consumir $caloriasDiarias calorias por dia.")
         }
