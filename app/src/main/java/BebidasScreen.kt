@@ -86,10 +86,10 @@ fun BebidasScreen() {
 
 fun calcularCaloriasPorMl(bebida: String): Int {
     return when (bebida) {
-        "Coca-Cola" -> 37
-        "Sumo de Laranja" -> 45
+        "Coca-Cola" -> 4
+        "Sumo de Laranja" -> 3
         "Água" -> 0
-        "Leite" -> 64
+        "Leite" -> 2
         else -> 0
     }
 }
