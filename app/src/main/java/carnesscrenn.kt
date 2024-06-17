@@ -80,7 +80,7 @@ fun CarnesScreen() {
 
 
         if (showResult) {
-            Text(text = "Total de calorias consumidas: $totalCalorias cal")
+            Text(text = "Total de calorias consumidas: $totalCalorias kcal")
         }
     }
 }

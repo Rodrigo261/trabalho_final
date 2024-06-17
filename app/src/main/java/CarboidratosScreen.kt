@@ -78,7 +78,7 @@ fun CarboidratosScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (showResult) {
-            Text(text = "Total de carboidratos consumidos: $totalCarboidratos g")
+            Text(text = "Total de calorias consumidas: $totalCarboidratos kcal")
         }
     }
 }

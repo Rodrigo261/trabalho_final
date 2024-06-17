@@ -78,7 +78,7 @@ fun BebidasScreen() {
 
 
         if (showResult) {
-            Text(text = "Total de calorias consumidas: $totalCalorias calorias")
+            Text(text = "Total de calorias consumidas: $totalCalorias kcal")
         }
     }
 }

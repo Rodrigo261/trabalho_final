@@ -77,7 +77,7 @@ fun FrutaScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (showResult) {
-            Text(text = "Total de calorias consumidas: $totalCalorias cal")
+            Text(text = "Total de calorias consumidas: $totalCalorias kcal")
         }
     }
 }
