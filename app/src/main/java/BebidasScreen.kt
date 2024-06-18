@@ -17,6 +17,7 @@ fun BebidasScreen() {
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
+    var quantidadeValida by rememberSaveable { mutableStateOf(true) }
 
     val bebidas = listOf(
         "Coca-Cola",
@@ -96,9 +97,9 @@ fun BebidasScreen() {
 
         if (objetivo.isNotEmpty()) {
             val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 330 e 500 ml."
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 ml."
                 "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 ml."
-                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 330 ml."
+                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade moderada."
                 else -> ""
             }
             Text(text = recomendacao)
@@ -107,17 +108,31 @@ fun BebidasScreen() {
 
         OutlinedTextField(
             value = quantidade,
-            onValueChange = { quantidade = it },
+            onValueChange = {
+                quantidade = it
+                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+            },
             label = { Text("Quantidade (ml)") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !quantidadeValida
         )
+        if (!quantidadeValida) {
+            Text(
+                text = "Por favor, insira um valor positivo.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            totalCalorias = atualizarCalorias(bebida, quantidade)
-            showResult = true
-        }) {
+        Button(
+            onClick = {
+                totalCalorias = atualizarCalorias(bebida, quantidade)
+                showResult = true
+            },
+            enabled = bebida.isNotEmpty() && quantidadeValida
+        ) {
             Text(text = "Calcular Calorias")
         }
 
@@ -144,4 +159,5 @@ fun atualizarCalorias(bebida: String, quantidade: String): Int {
     val caloriasPorMl = calcularCaloriasPorMl(bebida)
     return quantidadeMl * caloriasPorMl
 }
+
 
