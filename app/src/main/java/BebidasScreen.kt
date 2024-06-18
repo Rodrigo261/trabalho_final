@@ -6,11 +6,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun BebidasScreen() {
+    var objetivo by rememberSaveable { mutableStateOf("") }
     var bebida by rememberSaveable { mutableStateOf("") }
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
@@ -32,16 +34,21 @@ fun BebidasScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Seleção de bebida
-        Text(text = "Selecione a Bebida")
+        // Seleção do objetivo
+        Text(text = "Selecione o Objetivo")
         Spacer(modifier = Modifier.height(8.dp))
 
+        val objetivos = listOf(
+            "Manter Peso",
+            "Diminuir Peso",
+            "Aumentar Peso"
+        )
 
-        bebidas.forEach { option ->
+        objetivos.forEach { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
-                    selected = bebida == option,
-                    onClick = { bebida = option },
+                    selected = objetivo == option,
+                    onClick = { objetivo = option },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MaterialTheme.colorScheme.primary,
                         unselectedColor = MaterialTheme.colorScheme.onSurface
@@ -55,6 +62,48 @@ fun BebidasScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Seleção de bebida
+        Text(text = "Selecione a Bebida")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        bebidas.forEach { option ->
+            val color = when (objetivo) {
+                "Aumentar Peso" -> if (option == "Coca-Cola") Color.Green else Color.Red
+                "Diminuir Peso" -> if (option == "Água") Color.Green else Color.Red
+                "Manter Peso" -> when (option) {
+                    "Sumo de Laranja", "Leite" -> Color.Green
+                    else -> Color.Red
+                }
+                else -> MaterialTheme.colorScheme.onSurface
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = bebida == option,
+                    onClick = { bebida = option },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = color,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Text(text = option, color = color)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (objetivo.isNotEmpty()) {
+            val recomendacao = when (objetivo) {
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 330 e 500 ml."
+                "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 ml."
+                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 330 ml."
+                else -> ""
+            }
+            Text(text = recomendacao)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         OutlinedTextField(
             value = quantidade,
@@ -65,9 +114,7 @@ fun BebidasScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         Button(onClick = {
-
             totalCalorias = atualizarCalorias(bebida, quantidade)
             showResult = true
         }) {
@@ -76,13 +123,11 @@ fun BebidasScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         if (showResult) {
             Text(text = "Total de calorias consumidas: $totalCalorias kcal")
         }
     }
 }
-
 
 fun calcularCaloriasPorMl(bebida: String): Int {
     return when (bebida) {
@@ -94,9 +139,9 @@ fun calcularCaloriasPorMl(bebida: String): Int {
     }
 }
 
-
 fun atualizarCalorias(bebida: String, quantidade: String): Int {
     val quantidadeMl = quantidade.toIntOrNull() ?: 0
     val caloriasPorMl = calcularCaloriasPorMl(bebida)
     return quantidadeMl * caloriasPorMl
 }
+
