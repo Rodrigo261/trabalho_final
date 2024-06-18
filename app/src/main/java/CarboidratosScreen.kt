@@ -17,6 +17,7 @@ fun CarboidratosScreen() {
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCarboidratos by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
+    var quantidadeValida by rememberSaveable { mutableStateOf(true) }
 
     val alimentos = listOf(
         "Massa",
@@ -107,17 +108,31 @@ fun CarboidratosScreen() {
 
         OutlinedTextField(
             value = quantidade,
-            onValueChange = { quantidade = it },
+            onValueChange = {
+                quantidade = it
+                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+            },
             label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !quantidadeValida
         )
+        if (!quantidadeValida) {
+            Text(
+                text = "Por favor, insira um valor positivo.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            totalCarboidratos = atualizarCarboidratos(alimento, quantidade)
-            showResult = true
-        }) {
+        Button(
+            onClick = {
+                totalCarboidratos = atualizarCarboidratos(alimento, quantidade)
+                showResult = true
+            },
+            enabled = alimento.isNotEmpty() && quantidadeValida
+        ) {
             Text(text = "Calcular Carboidratos")
         }
 
@@ -144,5 +159,6 @@ fun atualizarCarboidratos(alimento: String, quantidade: String): Int {
     val carboidratosPorGrama = calcularCarboidratosPorGrama(alimento)
     return (quantidadeGramas * carboidratosPorGrama) / 100
 }
+
 
 
