@@ -6,16 +6,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun CarboidratosScreen() {
+    var objetivo by rememberSaveable { mutableStateOf("") }
     var alimento by rememberSaveable { mutableStateOf("") }
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCarboidratos by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
-
 
     val alimentos = listOf(
         "Massa",
@@ -33,16 +34,21 @@ fun CarboidratosScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
-        Text(text = "Selecione o Alimento")
+        // Seleção do objetivo
+        Text(text = "Selecione o Objetivo")
         Spacer(modifier = Modifier.height(8.dp))
 
+        val objetivos = listOf(
+            "Manter Peso",
+            "Diminuir Peso",
+            "Aumentar Peso"
+        )
 
-        alimentos.forEach { option ->
+        objetivos.forEach { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
-                    selected = alimento == option,
-                    onClick = { alimento = option },
+                    selected = objetivo == option,
+                    onClick = { objetivo = option },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MaterialTheme.colorScheme.primary,
                         unselectedColor = MaterialTheme.colorScheme.onSurface
@@ -56,6 +62,48 @@ fun CarboidratosScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Seleção de alimento
+        Text(text = "Selecione o Alimento")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        alimentos.forEach { option ->
+            val color = when (objetivo) {
+                "Aumentar Peso" -> if (option == "Pão") Color.Green else Color.Red
+                "Diminuir Peso" -> if (option == "Batata") Color.Green else Color.Red
+                "Manter Peso" -> when (option) {
+                    "Massa", "Arroz" -> Color.Green
+                    else -> Color.Red
+                }
+                else -> MaterialTheme.colorScheme.onSurface
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = alimento == option,
+                    onClick = { alimento = option },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = color,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Text(text = option, color = color)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (objetivo.isNotEmpty()) {
+            val recomendacao = when (objetivo) {
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
+                "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
+                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
+                else -> ""
+            }
+            Text(text = recomendacao)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         OutlinedTextField(
             value = quantidade,
@@ -66,9 +114,7 @@ fun CarboidratosScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         Button(onClick = {
-
             totalCarboidratos = atualizarCarboidratos(alimento, quantidade)
             showResult = true
         }) {
@@ -78,11 +124,10 @@ fun CarboidratosScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (showResult) {
-            Text(text = "Total de calorias consumidas: $totalCarboidratos kcal")
+            Text(text = "Total de carboidratos consumidos: $totalCarboidratos g")
         }
     }
 }
-
 
 fun calcularCarboidratosPorGrama(alimento: String): Int {
     return when (alimento) {
@@ -94,10 +139,10 @@ fun calcularCarboidratosPorGrama(alimento: String): Int {
     }
 }
 
-
 fun atualizarCarboidratos(alimento: String, quantidade: String): Int {
     val quantidadeGramas = quantidade.toIntOrNull() ?: 0
     val carboidratosPorGrama = calcularCarboidratosPorGrama(alimento)
     return (quantidadeGramas * carboidratosPorGrama) / 100
 }
+
 
