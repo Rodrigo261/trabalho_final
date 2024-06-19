@@ -17,6 +17,8 @@ fun CarnesScreen() {
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
+    var quantidadeValida by rememberSaveable { mutableStateOf(true) }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
 
     val carnes = listOf(
         "Bife de Porco",
@@ -107,22 +109,48 @@ fun CarnesScreen() {
 
         OutlinedTextField(
             value = quantidade,
-            onValueChange = { quantidade = it },
+            onValueChange = {
+                quantidade = it
+                quantidadeValida = it.toIntOrNull()?.let { it > 0 } ?: false
+            },
             label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !quantidadeValida
         )
+        if (!quantidadeValida) {
+            Text(
+                text = "Por favor, insira um valor positivo.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            val calorias = atualizarCaloriasCarne(carne, quantidade)
-            totalCalorias = calorias
-            showResult = true
-        }) {
+        Button(
+            onClick = {
+                if (carne.isEmpty() || quantidade.isEmpty()) {
+                    errorMessage = "Por favor, selecione uma carne e insira a quantidade."
+                    showResult = false
+                } else if (!quantidadeValida) {
+                    errorMessage = "Por favor, insira uma quantidade válida e positiva."
+                    showResult = false
+                } else {
+                    totalCalorias = atualizarCaloriasCarne(carne, quantidade)
+                    showResult = true
+                    errorMessage = ""
+                }
+            },
+            enabled = carne.isNotEmpty() && quantidadeValida
+        ) {
             Text(text = "Calcular Calorias")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        if (errorMessage.isNotEmpty()) {
+            Text(text = errorMessage, color = Color.Red)
+        }
 
         if (showResult) {
             Text(text = "Total de calorias consumidas: $totalCalorias kcal")
@@ -130,9 +158,9 @@ fun CarnesScreen() {
     }
 }
 
-fun calcularCaloriasPorGrama(alimento: String): Int {
-    return when (alimento) {
-        "Bife de Porco"-> 20
+fun calcularCaloriasPorGrama(carne: String): Int {
+    return when (carne) {
+        "Bife de Porco" -> 20
         "Almôndegas" -> 25
         "Bife de Frango" -> 15
         "Picanha" -> 30
