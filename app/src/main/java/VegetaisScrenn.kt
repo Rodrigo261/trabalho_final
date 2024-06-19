@@ -6,16 +6,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun VegetaisScreen() {
+    var objetivo by rememberSaveable { mutableStateOf("") }
     var vegetal by rememberSaveable { mutableStateOf("") }
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
-
 
     val vegetais = listOf(
         "Alface",
@@ -33,16 +34,21 @@ fun VegetaisScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
-        Text(text = "Selecione o Vegetal")
+        // Seleção do objetivo
+        Text(text = "Selecione o Objetivo")
         Spacer(modifier = Modifier.height(8.dp))
 
+        val objetivos = listOf(
+            "Manter Peso",
+            "Diminuir Peso",
+            "Aumentar Peso"
+        )
 
-        vegetais.forEach { option ->
+        objetivos.forEach { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
-                    selected = vegetal == option,
-                    onClick = { vegetal = option },
+                    selected = objetivo == option,
+                    onClick = { objetivo = option },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MaterialTheme.colorScheme.primary,
                         unselectedColor = MaterialTheme.colorScheme.onSurface
@@ -56,6 +62,49 @@ fun VegetaisScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Seleção de vegetal
+        Text(text = "Selecione o Vegetal")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        vegetais.forEach { option ->
+            val color = when (objetivo) {
+                "Aumentar Peso" -> if (option == "Cenoura") Color.Green else Color.Red
+                "Diminuir Peso" -> if (option == "Alface") Color.Green else Color.Red
+                "Manter Peso" -> when (option) {
+                    "Espinafre", "Couve" -> Color.Green
+                    else -> Color.Red
+                }
+                else -> MaterialTheme.colorScheme.onSurface
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = vegetal == option,
+                    onClick = { vegetal = option },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = color,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Text(text = option, color = color)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (objetivo.isNotEmpty()) {
+            val recomendacao = when (objetivo) {
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
+                "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
+                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
+                else -> ""
+            }
+            Text(text = recomendacao)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         OutlinedTextField(
             value = quantidade,
             onValueChange = { quantidade = it },
@@ -66,7 +115,6 @@ fun VegetaisScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-
             val calorias = atualizarCaloriasVegetal(vegetal, quantidade)
             totalCalorias = calorias
             showResult = true
@@ -76,25 +124,24 @@ fun VegetaisScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         if (showResult) {
             Text(text = "Total de calorias consumidas: $totalCalorias kcal")
         }
     }
 }
 
-fun calcularCaloriasPorGramaVegetal(vegetal: String): Float {
+fun calcularCaloriasPorGramaVegetal(vegetal: String): Int {
     return when (vegetal) {
-        "Alface" -> 0.17f
-        "Espinafre" -> 0.23f
-        "Cenoura" -> 0.41f
-        "Couve" -> 0.35f
-        else -> 0f
+        "Alface" -> 1
+        "Espinafre" -> 2
+        "Cenoura" -> 4
+        "Couve" -> 3
+        else -> 0
     }
 }
 
 fun atualizarCaloriasVegetal(vegetal: String, quantidade: String): Int {
     val quantidadeGramas = quantidade.toIntOrNull() ?: 0
     val caloriasPorGrama = calcularCaloriasPorGramaVegetal(vegetal)
-    return (quantidadeGramas * caloriasPorGrama).toInt()
+    return (quantidadeGramas * caloriasPorGrama)
 }
