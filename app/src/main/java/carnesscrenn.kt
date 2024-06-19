@@ -171,6 +171,6 @@ fun calcularCaloriasPorGrama(carne: String): Int {
 fun atualizarCaloriasCarne(carne: String, quantidade: String): Int {
     val quantidadeGramas = quantidade.toIntOrNull() ?: 0
     val caloriasPorGrama = calcularCaloriasPorGrama(carne)
-    return (quantidadeGramas * caloriasPorGrama).toInt()
+    return (quantidadeGramas * caloriasPorGrama)
 }
 

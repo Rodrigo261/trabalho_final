@@ -157,7 +157,7 @@ fun calcularCarboidratosPorGrama(alimento: String): Int {
 fun atualizarCarboidratos(alimento: String, quantidade: String): Int {
     val quantidadeGramas = quantidade.toIntOrNull() ?: 0
     val carboidratosPorGrama = calcularCarboidratosPorGrama(alimento)
-    return (quantidadeGramas * carboidratosPorGrama) / 100
+    return (quantidadeGramas * carboidratosPorGrama)
 }
 
 
