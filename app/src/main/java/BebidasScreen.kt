@@ -97,9 +97,9 @@ fun BebidasScreen() {
 
         if (objetivo.isNotEmpty()) {
             val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 ml."
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 330 e 660 ml."
                 "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 ml."
-                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade moderada."
+                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 330 ml."
                 else -> ""
             }
             Text(text = recomendacao)

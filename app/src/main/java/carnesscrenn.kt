@@ -98,9 +98,9 @@ fun CarnesScreen() {
 
         if (objetivo.isNotEmpty()) {
             val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
                 "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
-                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade moderada."
+                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
                 else -> ""
             }
             Text(text = recomendacao)
