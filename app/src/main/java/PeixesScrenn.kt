@@ -63,7 +63,7 @@ fun PeixesScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Seleção de peixe
+        // Seleção do peixe
         Text(text = "Selecione o Peixe")
         Spacer(modifier = Modifier.height(8.dp))
 

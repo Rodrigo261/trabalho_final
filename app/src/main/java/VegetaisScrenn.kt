@@ -17,6 +17,7 @@ fun VegetaisScreen() {
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
+    var quantidadeValida by rememberSaveable { mutableStateOf(true) }
 
     val vegetais = listOf(
         "Alface",
@@ -62,7 +63,7 @@ fun VegetaisScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Seleção de vegetal
+        // Seleção do vegetal
         Text(text = "Selecione o Vegetal")
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -96,7 +97,7 @@ fun VegetaisScreen() {
 
         if (objetivo.isNotEmpty()) {
             val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 450 g."
                 "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
                 "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
                 else -> ""
@@ -107,18 +108,31 @@ fun VegetaisScreen() {
 
         OutlinedTextField(
             value = quantidade,
-            onValueChange = { quantidade = it },
+            onValueChange = {
+                quantidade = it
+                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+            },
             label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !quantidadeValida
         )
+        if (!quantidadeValida) {
+            Text(
+                text = "Por favor, insira um valor positivo.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            val calorias = atualizarCaloriasVegetal(vegetal, quantidade)
-            totalCalorias = calorias
-            showResult = true
-        }) {
+        Button(
+            onClick = {
+                totalCalorias = atualizarCaloriasVegetal(vegetal, quantidade)
+                showResult = true
+            },
+            enabled = vegetal.isNotEmpty() && quantidadeValida
+        ) {
             Text(text = "Calcular Calorias")
         }
 
