@@ -17,6 +17,7 @@ fun PeixesScreen() {
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
+    var quantidadeValida by rememberSaveable { mutableStateOf(true) }
 
     val peixes = listOf(
         "Salmão",
@@ -68,10 +69,10 @@ fun PeixesScreen() {
 
         peixes.forEach { option ->
             val color = when (objetivo) {
-                "Aumentar Peso" -> if (option == "Sardinha") Color.Green else Color.Red
+                "Aumentar Peso" -> if (option == "Salmão") Color.Green else Color.Red
                 "Diminuir Peso" -> if (option == "Bacalhau") Color.Green else Color.Red
                 "Manter Peso" -> when (option) {
-                    "Atum", "Salmão" -> Color.Green
+                    "Atum", "Sardinha" -> Color.Green
                     else -> Color.Red
                 }
                 else -> MaterialTheme.colorScheme.onSurface
@@ -96,7 +97,7 @@ fun PeixesScreen() {
 
         if (objetivo.isNotEmpty()) {
             val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 400 g."
+                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 450 g."
                 "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
                 "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
                 else -> ""
@@ -107,18 +108,31 @@ fun PeixesScreen() {
 
         OutlinedTextField(
             value = quantidade,
-            onValueChange = { quantidade = it },
+            onValueChange = {
+                quantidade = it
+                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+            },
             label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !quantidadeValida
         )
+        if (!quantidadeValida) {
+            Text(
+                text = "Por favor, insira um valor positivo.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            val calorias = atualizarCaloriasPeixe(peixe, quantidade)
-            totalCalorias = calorias
-            showResult = true
-        }) {
+        Button(
+            onClick = {
+                totalCalorias = atualizarCaloriasPeixe(peixe, quantidade)
+                showResult = true
+            },
+            enabled = peixe.isNotEmpty() && quantidadeValida
+        ) {
             Text(text = "Calcular Calorias")
         }
 
