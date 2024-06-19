@@ -17,6 +17,7 @@ fun FrutaScreen() {
     var quantidade by rememberSaveable { mutableStateOf("") }
     var totalCalorias by rememberSaveable { mutableStateOf(0) }
     var showResult by rememberSaveable { mutableStateOf(false) }
+    var quantidadeValida by rememberSaveable { mutableStateOf(true) }
 
     val frutas = listOf(
         "Maçã",
@@ -107,18 +108,32 @@ fun FrutaScreen() {
 
         OutlinedTextField(
             value = quantidade,
-            onValueChange = { quantidade = it },
+            onValueChange = {
+                quantidade = it
+                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+            },
             label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !quantidadeValida
         )
+        if (!quantidadeValida) {
+            Text(
+                text = "Por favor, insira um valor positivo.",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            val calorias = atualizarCaloriasFruta(fruta, quantidade)
-            totalCalorias = calorias
-            showResult = true
-        }) {
+        Button(
+            onClick = {
+                val calorias = atualizarCaloriasFruta(fruta, quantidade)
+                totalCalorias = calorias
+                showResult = true
+            },
+            enabled = fruta.isNotEmpty() && quantidadeValida
+        ) {
             Text(text = "Calcular Calorias")
         }
 
@@ -129,6 +144,7 @@ fun FrutaScreen() {
         }
     }
 }
+
 
 fun calcularCaloriasPorGramaFruta(fruta: String): Int {
     return when (fruta) {
