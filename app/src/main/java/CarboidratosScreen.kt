@@ -1,6 +1,8 @@
 package com.example.trabalho_final
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,16 +30,17 @@ fun CarboidratosScreen() {
 
     val context = LocalContext.current
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Seleção do objetivo
-        Text(text = "Selecione o Objetivo")
-        Spacer(modifier = Modifier.height(8.dp))
+        item {
+            Text(text = "Selecione o Objetivo")
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         val objetivos = listOf(
             "Manter Peso",
@@ -45,7 +48,7 @@ fun CarboidratosScreen() {
             "Aumentar Peso"
         )
 
-        objetivos.forEach { option ->
+        items(objetivos) { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
                     selected = objetivo == option,
@@ -61,13 +64,13 @@ fun CarboidratosScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Selecione o Alimento")
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-        // Seleção de alimento
-        Text(text = "Selecione o Alimento")
-        Spacer(modifier = Modifier.height(8.dp))
-
-        alimentos.forEach { option ->
+        items(alimentos) { option ->
             val color = when (objetivo) {
                 "Aumentar Peso" -> if (option == "Pão") Color.Green else Color.Red
                 "Diminuir Peso" -> if (option == "Batata") Color.Green else Color.Red
@@ -93,53 +96,55 @@ fun CarboidratosScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (objetivo.isNotEmpty()) {
-            val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
-                "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
-                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
-                else -> ""
-            }
-            Text(text = recomendacao)
+        item {
             Spacer(modifier = Modifier.height(8.dp))
-        }
 
-        OutlinedTextField(
-            value = quantidade,
-            onValueChange = {
-                quantidade = it
-                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
-            },
-            label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = !quantidadeValida
-        )
-        if (!quantidadeValida) {
-            Text(
-                text = "Por favor, insira um valor positivo.",
-                color = Color.Red,
-                style = MaterialTheme.typography.bodySmall
+            if (objetivo.isNotEmpty()) {
+                val recomendacao = when (objetivo) {
+                    "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
+                    "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
+                    "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
+                    else -> ""
+                }
+                Text(text = recomendacao)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            OutlinedTextField(
+                value = quantidade,
+                onValueChange = {
+                    quantidade = it
+                    quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+                },
+                label = { Text("Quantidade (g)") },
+                modifier = Modifier.fillMaxWidth(),
+                isError = !quantidadeValida
             )
-        }
+            if (!quantidadeValida) {
+                Text(
+                    text = "Por favor, insira um valor positivo.",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                totalCarboidratos = atualizarCarboidratos(alimento, quantidade)
-                showResult = true
-            },
-            enabled = alimento.isNotEmpty() && quantidadeValida
-        ) {
-            Text(text = "Calcular Carboidratos")
-        }
+            Button(
+                onClick = {
+                    totalCarboidratos = atualizarCarboidratos(alimento, quantidade)
+                    showResult = true
+                },
+                enabled = alimento.isNotEmpty() && quantidadeValida
+            ) {
+                Text(text = "Calcular Carboidratos")
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        if (showResult) {
-            Text(text = "Total de carboidratos consumidos: $totalCarboidratos g")
+            if (showResult) {
+                Text(text = "Total de carboidratos consumidos: $totalCarboidratos g")
+            }
         }
     }
 }
