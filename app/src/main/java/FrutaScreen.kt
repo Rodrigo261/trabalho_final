@@ -1,6 +1,8 @@
 package com.example.trabalho_final
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,16 +30,17 @@ fun FrutaScreen() {
 
     val context = LocalContext.current
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Seleção do objetivo
-        Text(text = "Selecione o Objetivo")
-        Spacer(modifier = Modifier.height(8.dp))
+        item {
+            Text(text = "Selecione o Objetivo")
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         val objetivos = listOf(
             "Manter Peso",
@@ -45,7 +48,7 @@ fun FrutaScreen() {
             "Aumentar Peso"
         )
 
-        objetivos.forEach { option ->
+        items(objetivos) { option ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
                     selected = objetivo == option,
@@ -61,13 +64,13 @@ fun FrutaScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Selecione a Fruta")
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-        // Seleção de fruta
-        Text(text = "Selecione a Fruta")
-        Spacer(modifier = Modifier.height(8.dp))
-
-        frutas.forEach { option ->
+        items(frutas) { option ->
             val color = when (objetivo) {
                 "Aumentar Peso" -> if (option == "Banana") Color.Green else Color.Red
                 "Diminuir Peso" -> if (option == "Maçã") Color.Green else Color.Red
@@ -93,58 +96,58 @@ fun FrutaScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (objetivo.isNotEmpty()) {
-            val recomendacao = when (objetivo) {
-                "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
-                "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
-                "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
-                else -> ""
-            }
-            Text(text = recomendacao)
+        item {
             Spacer(modifier = Modifier.height(8.dp))
-        }
 
-        OutlinedTextField(
-            value = quantidade,
-            onValueChange = {
-                quantidade = it
-                quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
-            },
-            label = { Text("Quantidade (g)") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = !quantidadeValida
-        )
-        if (!quantidadeValida) {
-            Text(
-                text = "Por favor, insira um valor positivo.",
-                color = Color.Red,
-                style = MaterialTheme.typography.bodySmall
+            if (objetivo.isNotEmpty()) {
+                val recomendacao = when (objetivo) {
+                    "Aumentar Peso" -> "Para seu objetivo, recomendamos a quantidade entre 300 e 500 g."
+                    "Diminuir Peso" -> "Para seu objetivo, recomendamos a quantidade entre 100 e 200 g."
+                    "Manter Peso" -> "Para seu objetivo, recomendamos a quantidade entre 200 e 300 g."
+                    else -> ""
+                }
+                Text(text = recomendacao)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            OutlinedTextField(
+                value = quantidade,
+                onValueChange = {
+                    quantidade = it
+                    quantidadeValida = quantidade.toIntOrNull()?.let { it > 0 } ?: false
+                },
+                label = { Text("Quantidade (g)") },
+                modifier = Modifier.fillMaxWidth(),
+                isError = !quantidadeValida
             )
-        }
+            if (!quantidadeValida) {
+                Text(
+                    text = "Por favor, insira um valor positivo.",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                val calorias = atualizarCaloriasFruta(fruta, quantidade)
-                totalCalorias = calorias
-                showResult = true
-            },
-            enabled = fruta.isNotEmpty() && quantidadeValida
-        ) {
-            Text(text = "Calcular Calorias")
-        }
+            Button(
+                onClick = {
+                    totalCalorias = atualizarCaloriasFruta(fruta, quantidade)
+                    showResult = true
+                },
+                enabled = fruta.isNotEmpty() && quantidadeValida
+            ) {
+                Text(text = "Calcular Calorias")
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        if (showResult) {
-            Text(text = "Total de calorias consumidas: $totalCalorias kcal")
+            if (showResult) {
+                Text(text = "Total de calorias consumidas: $totalCalorias kcal")
+            }
         }
     }
 }
-
 
 fun calcularCaloriasPorGramaFruta(fruta: String): Int {
     return when (fruta) {
@@ -161,6 +164,5 @@ fun atualizarCaloriasFruta(fruta: String, quantidade: String): Int {
     val caloriasPorGrama = calcularCaloriasPorGramaFruta(fruta)
     return (quantidadeGramas * caloriasPorGrama)
 }
-
 
 
