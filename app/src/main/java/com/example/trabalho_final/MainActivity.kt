@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -73,6 +75,16 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val context = LocalContext.current
 
+    val buttons = listOf(
+        "Bebidas" to BebidasActivity::class.java,
+        "Peixes" to PeixesActivity::class.java,
+        "Carnes" to CarnesActivity::class.java,
+        "Carboidratos" to CarboidratosActivity::class.java,
+        "Frutas" to FrutaActivity::class.java,
+        "Vegetais" to VegetaisActivity::class.java,
+        "Calcular Objetivo" to ObjetivoActivity::class.java
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -83,39 +95,21 @@ fun MainScreen() {
             )
         },
         content = { paddingValues ->
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(onClick = { navigateToActivity(context, BebidasActivity::class.java) }) {
-                    Text(text = "Bebidas")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navigateToActivity(context, PeixesActivity::class.java) }) {
-                    Text(text = "Peixes")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navigateToActivity(context, CarnesActivity::class.java) }) {
-                    Text(text = "Carnes")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navigateToActivity(context, CarboidratosActivity::class.java) }) {
-                    Text(text = "Carboidratos")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navigateToActivity(context, FrutaActivity::class.java) }) {
-                    Text(text = "Frutas")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navigateToActivity(context, VegetaisActivity::class.java) }) {
-                    Text(text = "Vegetais")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navigateToActivity(context, ObjetivoActivity::class.java) }) {
-                    Text(text = "Calcular Objetivo")
+                items(buttons) { (text, activityClass) ->
+                    Button(
+                        onClick = { navigateToActivity(context, activityClass) },
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
+                    ) {
+                        Text(text = text)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
